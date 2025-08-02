@@ -53,3 +53,4 @@ Thumbs.db
 *.joblib
 *.h5
 *.model
+.Rproj.user
