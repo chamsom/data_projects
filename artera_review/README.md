@@ -44,7 +44,7 @@ Use `survdiff()` or a log-rank test to see whether there was a difference in sur
 
 **What is Cox Regression Model for?**
 1. Analyze and understand the relationship between survival time of subjects and one or more predictor variables (covariates).
-2. Focuses on the **Hazard Function** or the risk of an event occurring given the subject has surved up to that time.
+2. Focuses on the **Hazard Function** or the risk of an event occurring given the subject has survived up to that time.
 3. Estimates the hazard ratios for each predictor variable.
 
 To create a cox regression model use:

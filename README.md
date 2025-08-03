@@ -13,4 +13,4 @@
 - R Shiny application that generates clinical outcomes, measures efficacy rates, and provides evaluation of summary statistics.
 
 ## artera_review
-- R files using multiple datasets to perform survival analysis. This folder will be ongoing for self-study and ongoing interview preparation.
+- R files using multiple datasets to perform survival analysis. This folder is ongoing for self-study and projects.
