@@ -74,6 +74,14 @@ ggsurvplot(fit,
 
 summary(fit)
 
+# estimating x-year survival: estimate the probability of surviving to 1 year
+# ~ 1 estimate survival probabilities for the entire data set as a single group
+one_year_fit <- summary(survfit(Surv(time, status) ~ 1, data = lung), times = 365)
+one_year_fit # 1 year survival probability is 41%
+
+# using survdiff()/log-rank test to see whether there was a difference in survival time according to sex
+survdiff(Surv(time, status) ~ sex, data = lung)
+
 # -------------------- SURVIVAL CURVES --------------------
 
 
@@ -108,3 +116,24 @@ summary(bed_fit)
 
 # -------------------- COX REGRESSION --------------------
 
+# Cox Proportional Hazards Model shows impact of predictors (age, gender, treatment type, etc.) influence risk of event occurring
+# accommodates censored data: individuals do not experience event by end of study or drop out
+# in this case, cox_model's predictor variables/covariates are age + sex + ph.ecog
+cox_model <- coxph(Surv(time, status) ~ age + sex + ph.ecog, data = lung)
+summary(cox_model)
+
+# broom packages takes messy output and turns them into tidy tibbles via three S3 methods: tidy, augment, glance
+# library(broom) line is not necessary as package 'broom' was built under R version 4.4.3
+# tidy constructs tibble that summarizes model's statistical findings
+# exponentiate = TRUE returns the hazard ratio rather than the log hazard ratio
+hr_results <- tidy(cox_model, exponentiate = TRUE, conf.int = TRUE)
+print(hr_results)
+
+# concordance() assess predictive accuracy of a survival model
+# C-index measures how well the model predicts the order of events
+# C-index of 1 = model perfectly predicts order of survival times
+# C-index of 0.5 = no better than random chance in predicting order of events
+# C-index < 0.5 = model is performing worse than random chance
+concordance(cox_model)
+
+# -------------------- COX REGRESSION --------------------
