@@ -1,5 +1,4 @@
 ## Personal portfolio of data science projects, including completed work and ongoing development.
-----
 
 ## miq_revops_analysis
 - Forecasts revenue for two quarters applying Holt-Winters exponential smoothing.
