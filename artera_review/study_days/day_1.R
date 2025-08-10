@@ -67,3 +67,23 @@ df %>%
 # 3. Decide between two-sample t-test or a Wilcoxon rank-sum test
 # 4. Run the appropriate test
 # 5. Interpret the results in plain language (clinical/statistical)
+
+# 1. filter() + %in% c("low", "high")
+sub_df <- df %>%
+  filter(clinical_risk %in% c("low", "high"))
+
+head(sub_df)
+
+# 2. Use shapiro.test() on each clinical_risk group separately
+# $combined_score at the end extracts values from the combined_score column
+low_risk <- filter(sub_df, clinical_risk == "low")$combined_score
+high_risk <- filter(sub_df, clinical_risk == "high")$combined_score
+
+shapiro.test(low_risk) # this is normal as p > 0.05
+shapiro.test(high_risk) # this is not normal as p < 0.05
+
+# 3. If both groups are approximately normal -> t-test otherwise, Wilcoxon rank-sum test (non-parametric)
+# "high_risk" group is failing normality so proceed to use non-parametric tests for the entire comparison
+wilcox.test(low_risk, high_risk)
+
+
