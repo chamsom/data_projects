@@ -1,4 +1,4 @@
-install.packages(c("tidyverse", "lubridate", "psych", "survival"))
+# install.packages(c("tidyverse", "lubridate", "psych", "survival"))
 
 library(tidyverse)
 library(lubridate)
@@ -73,7 +73,7 @@ sub_df <- df %>%
   filter(clinical_risk %in% c("low", "high"))
 
 head(sub_df)
-
+frd
 # 2. Use shapiro.test() on each clinical_risk group separately
 # $combined_score at the end extracts values from the combined_score column
 low_risk <- filter(sub_df, clinical_risk == "low")$combined_score
