@@ -25,7 +25,7 @@ head(df)
 df %>%
   filter(clinical_risk == "high")
 
-# start with existing dataframe and pip it forward, creating a new column called "combined_score"
+# start with existing dataframe and pipe it forward, creating a new column called "combined_score"
 # mutate() creates derived metrics
 # original df is changed as the result is saved back to the df variable
 df <- df %>%
@@ -69,14 +69,14 @@ df %>%
 # 5. Interpret the results in plain language (clinical/statistical)
 
 # 1. filter() + %in% c("low", "high")
-sub_df <- df %>%
+df <- df %>%
   filter(clinical_risk %in% c("low", "high"))
 
 head(sub_df)
 # 2. Use shapiro.test() on each clinical_risk group separately
 # $combined_score at the end extracts values from the combined_score column
-low_risk <- filter(sub_df, clinical_risk == "low")$combined_score
-high_risk <- filter(sub_df, clinical_risk == "high")$combined_score
+low_risk <- filter(df, clinical_risk == "low")$combined_score
+high_risk <- filter(df, clinical_risk == "high")$combined_score
 
 shapiro.test(low_risk) # this is normal as p > 0.05
 shapiro.test(high_risk) # this is not normal as p < 0.05
