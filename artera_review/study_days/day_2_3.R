@@ -120,3 +120,51 @@ mean_mri <- joined_df %>%
 
 # Descriptive statistics & visual checks
 # for each clinical group, calculate: mean, median, standard deviation
+desc_stats <- joined_df %>%
+  group_by(clinical_risk) %>%
+  summarize(
+    mean_combined = mean(combined_score, na.rm = TRUE),
+    median_combined = median(combined_score, na.rm = TRUE),
+    sd_combined = sd(combined_score, na.rm = TRUE)
+  )
+
+library(ggplot2)
+
+
+# create boxplot to visualize differences in combined_score by clinical_risk
+# fill controls interior color of geometric objects...
+# ...each level of clinical_risk gets a different fill color
+ggplot(joined_df, aes(x = clinical_risk, y = combined_score, fill = clinical_risk)) + 
+  geom_boxplot() + 
+  theme_minimal()
+
+
+######################### DAY 1 POTENTIAL PROMPT #########################
+
+
+# Scenario 2: Given patient clinical risk, biopsy score, MRI score, and combined score, determine...
+# whether MRI score is a significant predictor of combined score, after controlling for biopsy score.
+
+# 1. Check for correlation: Are mri_score and combined_score correlated?
+# Both tests resulted in a p-value greater than or equal to 0.05. Fail to reject NH, data is normal.
+shapiro.test(joined_df$mri_score)
+shapiro.test(joined_df$combined_score)
+
+# numeric-to-numeric comparison, use pearson method if data is normal
+# cor is .041, close to zero so there is almost no linear-relationship
+# there is no meaningful relationship between mri_score and combined_score
+# any observed correlation is likely due to random chance
+cor_test <- cor.test(joined_df$mri_score, joined_df$combined_score, use = "complete.obs", method = "pearson")
+cor_test
+
+
+# 2. Linear regression: Fit a linear model where combined_score is the dependent variable...
+# mri_score and biopsy_score are predictors
+lm_model <- lm(combined_score ~ mri_score + biopsy_score, data = joined_df)
+summary(lm_model)
+
+# biopsy score is a strong predictor of combined score with a p-val < 0.05
+# mri_score is not helpful
+# residual standard error means that prediction are within +/- 2.72 of actual values
+# multiple R-squared of 0.92 means the model fits well and captures 92% of the variability
+# model is significant with p-val < 0.05

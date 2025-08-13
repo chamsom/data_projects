@@ -59,6 +59,9 @@ df %>%
   arrange(desc(combined_score))
 
 
+######################### DAY 1 POTENTIAL PROMPT #########################
+
+
 # Scenario 1: Do patients in the high-risk group have significantly...
 # higher combined_score than those in low-risk group?
 
@@ -73,6 +76,8 @@ df <- df %>%
   filter(clinical_risk %in% c("low", "high"))
 
 head(sub_df)
+
+
 # 2. Use shapiro.test() on each clinical_risk group separately
 # $combined_score at the end extracts values from the combined_score column
 low_risk <- filter(df, clinical_risk == "low")$combined_score
@@ -81,8 +86,7 @@ high_risk <- filter(df, clinical_risk == "high")$combined_score
 shapiro.test(low_risk) # this is normal as p > 0.05
 shapiro.test(high_risk) # this is not normal as p < 0.05
 
+
 # 3. If both groups are approximately normal -> t-test otherwise, Wilcoxon rank-sum test (non-parametric)
 # "high_risk" group is failing normality so proceed to use non-parametric tests for the entire comparison
 wilcox.test(low_risk, high_risk)
-
-
