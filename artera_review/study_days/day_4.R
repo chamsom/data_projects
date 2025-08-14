@@ -42,4 +42,38 @@ ggsurvplot(fit,
            )
 
 # run log-rank test explicitly
+# p-val = 0.7 here which means that there's a 70% chances that differences are due to random variation
 survdiff(Surv(surv_df$time_to_event, surv_df$event) ~ clinical_risk, data = surv_df)
+
+
+# Scenario 5: Investigate whether clinical risk is associated with time to event but...
+# ...adjust for age and biopsy score as potential confounders
+
+cox_model <- coxph(Surv(surv_df$time_to_event, surv_df$event) ~ clinical_risk + age + biopsy_score, data = surv_df)
+
+cox_tidy <- tidy(cox_model, exponentiate = TRUE, conf.int = TRUE)
+cox_tidy
+
+library(broom)
+
+# visualize adjusted survival curves for each clinical_risk group keeping age and biopsy_score fixed at their means
+newdata <- tibble(
+  clinical_risk = c("low", "intermediate", "high"),
+  age = mean(surv_df$age, na.rm = TRUE),
+  biopsy_score = mean(surv_df$biopsy_score, na.rm = TRUE)
+)
+
+ggsurvplot(
+  survfit(cox_model, newdata = newdata),
+  data = surv_df,
+  conf.int = TRUE,
+  xlab = "Time (months)",
+  ylab = "Survival Probability",
+  legend.title = "Clinical Risk",
+  legend.labs = c("low", "intermediate", "high")
+)
+
+# p-val >= 0.05 for clinical_risk, age, biopsy_score meaning the assumption holds
+# effect of clinical_risk, age, and biopsy_score stays consistent over time
+cox_zph <- cox.zph(cox_model)
+cox_zph
